@@ -253,48 +253,30 @@ else:
     #         GPIO1, etc., but these are not the same as the SoC GPIO
     #         numbers.
 
-    if _pi_revision in [1, 2]:
-        _pi_header_1_pins = {
-            3:  by_revision({1:0, 2:2}),
-            5:  by_revision({1:1, 2:3}),
-            7:  4,
-            8:  14,
-            10: 15,
-            11: 17,
-            12: 18,
-            13: by_revision({1:21, 2:27}),
-            15: 22,
-            16: 23,
-            18: 24,
-            19: 10,
-            21: 9,
-            22: 25,
-            23: 11,
-            24: 8,
-            26: 7
-            }
+    _pi_header_1_pins = {
+        3:  by_revision({1:0, 2:2, 3:2}),
+        5:  by_revision({1:1, 2:3, 3:3}),
+        7:  4,
+        8:  14,
+        10: 15,
+        11: 17,
+        12: 18,
+        13: by_revision({1:21, 2:27, 3:27}),
+        15: 22,
+        16: 23,
+        18: 24,
+        19: 10,
+        21: 9,
+        22: 25,
+        23: 11,
+        24: 8,
+        26: 7
+        }
 
-        _pi_gpio_pins = [_pi_header_1_pins[i] for i in [11, 12, 13, 15, 16, 18, 22, 7]]
+    _pi_gpio_pins = [_pi_header_1_pins[i] for i in [11, 12, 13, 15, 16, 18, 22, 7]]
 
-    elif _pi_revision is 3:
-        _pi_header_1_pins = {
-            3:  2,
-            5:  3,
-            7:  4,
-            8:  14,
-            10: 15,
-            11: 17,
-            12: 18,
-            13: 27,
-            15: 22,
-            16: 23,
-            18: 24,
-            19: 10,
-            21: 9,
-            22: 25,
-            23: 11,
-            24: 8,
-            26: 7,
+    if _pi_revision is 3:
+        _pi_header_1_pins.update({
             29: 5,
             31: 6,
             32: 12,
@@ -304,9 +286,9 @@ else:
             37: 26,
             38: 20,
             40: 21,
-            }
+            })
 
-        _pi_gpio_pins = [_pi_header_1_pins[i] for i in [11, 12, 13, 15, 16, 18, 22, 7, 29, 31, 32, 33, 35, 36, 37, 38, 40]]
+        _pi_gpio_pins.extend([_pi_header_1_pins[i] for i in [29, 31, 32, 33, 35, 36, 37, 38, 40]])
 
     def lookup(pin_mapping, i):
         try:
