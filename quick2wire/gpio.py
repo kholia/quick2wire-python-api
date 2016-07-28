@@ -16,6 +16,8 @@ def gpio_admin(subcommand, pin, pull=None):
 
 
 Out = "out"
+OutHigh = "high"
+OutLow = "low"
 In = "in"
 
 Rising = "rising"
@@ -77,7 +79,7 @@ class Pin(PinAPI):
         Parameters:
         user_pin_number -- the identity of the pin used to create the derived class.
         soc_pin_number  -- the pin on the header to control, identified by the SoC pin number.
-        direction       -- (optional) the direction of the pin, either In or Out.
+        direction       -- (optional) the direction of the pin, either In, Out, OutHigh or OutLow.
         interrupt       -- (optional)
         pull            -- (optional)
 
@@ -105,7 +107,7 @@ class Pin(PinAPI):
 
     def close(self):
         if not self.closed:
-            if self.direction == Out:
+            if self._direction == Out:
                 self.value = 0
             self._file.close()
             self._file = None
@@ -128,7 +130,7 @@ class Pin(PinAPI):
 
     def set(self, new_value):
         self._check_open()
-        if self._direction != Out:
+        if self._direction != Out and self._direction != OutHigh and self._direction != OutLow:
             raise ValueError("not an output pin")
         self._file.seek(0)
         self._file.write(str(int(new_value)))
