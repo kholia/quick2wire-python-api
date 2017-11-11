@@ -13,7 +13,7 @@ def errcheck(result, func, args):
 
 def lookup(restype, name, argtypes):
     f = libc[name]
-    f.restye = restype
+    f.restype = restype
     f.argtypes = argtypes
     f.errcheck = errcheck
     return f

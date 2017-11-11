@@ -3,7 +3,7 @@
 # Converted from i2c.h and i2c-dev.h
 # I2C only, no SMB definitions
 
-from ctypes import c_int, c_uint16, c_ushort, c_short, c_ubyte, c_char, POINTER, Structure
+from ctypes import c_uint32, c_uint16, c_char, POINTER, Structure
 
 # /usr/include/linux/i2c-dev.h: 38
 class i2c_msg(Structure):
@@ -11,8 +11,8 @@ class i2c_msg(Structure):
     
     _fields_ = [
         ('addr', c_uint16),
-        ('flags', c_ushort),
-        ('len', c_short),
+        ('flags', c_uint16),
+        ('len', c_uint16),
         ('buf', POINTER(c_char))]
     
     __slots__ = [name for name,type in _fields_]
@@ -34,7 +34,7 @@ class i2c_rdwr_ioctl_data(Structure):
     """<linux/i2c-dev.h> struct i2c_rdwr_ioctl_data"""
     _fields_ = [
         ('msgs', POINTER(i2c_msg)),
-        ('nmsgs', c_int)]
+        ('nmsgs', c_uint32)]
 
     __slots__ = [name for name,type in _fields_]
 

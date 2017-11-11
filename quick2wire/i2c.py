@@ -3,7 +3,7 @@ import sys
 import posix
 from fcntl import ioctl
 from quick2wire.i2c_ctypes import *
-from ctypes import create_string_buffer, sizeof, c_int, byref, pointer, addressof, string_at
+from ctypes import create_string_buffer, sizeof, string_at
 from quick2wire.board_revision import revision
 
 assert sys.version_info.major >= 3, __name__ + " is only supported on Python 3"
