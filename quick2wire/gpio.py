@@ -277,7 +277,7 @@ else:
 
     _pi_gpio_pins = [_pi_header_1_pins[i] for i in [11, 12, 13, 15, 16, 18, 22, 7]]
 
-    if _pi_revision is 3:
+    if _pi_revision == 3:
         _pi_header_1_pins.update({
             29: 5,
             31: 6,
