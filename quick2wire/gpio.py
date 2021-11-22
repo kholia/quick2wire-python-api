@@ -243,54 +243,86 @@ if _pi_revision == 0:
     pi_header_1 = pins
 
 else:
-    def by_revision(d):
-        return d[_pi_revision]
+    if _pi_revision < 4:
+        def by_revision(d):
+            return d[_pi_revision]
 
 
-    # Maps header pin numbers to SoC GPIO numbers
-    # See http://elinux.org/RPi_Low-level_peripherals
-    #
-    # Note: - header pins are numbered from 1, SoC GPIO from zero
-    #       - the Pi documentation identifies some header pins as GPIO0,
-    #         GPIO1, etc., but these are not the same as the SoC GPIO
-    #         numbers.
+        # Maps header pin numbers to SoC GPIO numbers
+        # See http://elinux.org/RPi_Low-level_peripherals
+        #
+        # Note: - header pins are numbered from 1, SoC GPIO from zero
+        #       - the Pi documentation identifies some header pins as GPIO0,
+        #         GPIO1, etc., but these are not the same as the SoC GPIO
+        #         numbers.
 
-    _pi_header_1_pins = {
-        3:  by_revision({1:0, 2:2, 3:2}),
-        5:  by_revision({1:1, 2:3, 3:3}),
-        7:  4,
-        8:  14,
-        10: 15,
-        11: 17,
-        12: 18,
-        13: by_revision({1:21, 2:27, 3:27}),
-        15: 22,
-        16: 23,
-        18: 24,
-        19: 10,
-        21: 9,
-        22: 25,
-        23: 11,
-        24: 8,
-        26: 7
-        }
+        _pi_header_1_pins = {
+            3:  by_revision({1:0, 2:2, 3:2}),
+            5:  by_revision({1:1, 2:3, 3:3}),
+            7:  4,
+            8:  14,
+            10: 15,
+            11: 17,
+            12: 18,
+            13: by_revision({1:21, 2:27, 3:27}),
+            15: 22,
+            16: 23,
+            18: 24,
+            19: 10,
+            21: 9,
+            22: 25,
+            23: 11,
+            24: 8,
+            26: 7
+            }
 
-    _pi_gpio_pins = [_pi_header_1_pins[i] for i in [11, 12, 13, 15, 16, 18, 22, 7]]
+        _pi_gpio_pins = [_pi_header_1_pins[i] for i in [11, 12, 13, 15, 16, 18, 22, 7]]
 
-    if _pi_revision == 3:
-        _pi_header_1_pins.update({
-            29: 5,
-            31: 6,
-            32: 12,
-            33: 13,
-            35: 19,
-            36: 16,
-            37: 26,
-            38: 20,
-            40: 21,
-            })
+        if _pi_revision == 3:
+            _pi_header_1_pins.update({
+                29: 5,
+                31: 6,
+                32: 12,
+                33: 13,
+                35: 19,
+                36: 16,
+                37: 26,
+                38: 20,
+                40: 21,
+                })
 
-        _pi_gpio_pins.extend([_pi_header_1_pins[i] for i in [29, 31, 32, 33, 35, 36, 37, 38, 40]])
+            _pi_gpio_pins.extend([_pi_header_1_pins[i] for i in [3, 5, 24, 26, 19, 21, 23, 8, 10]])
+    else:
+        _pi_header_1_pins = {
+            3:  456,
+            5:  457,
+            7:  458,
+            8:  486, # TXD0(486) or TXD1(468)?
+            10: 487, # RXD0(487) or RXD1(469)?
+            11: 471,
+            12: 472,
+            13: 481,
+            15: 476,
+            16: 477,
+            18: 478,
+            19: 464, # SPI_MOSI
+            21: 463, # SPI_MISO
+            22: 479,
+            23: 465, # SPI_SCLK
+            24: 462, # SPI_CE0_N
+            26: 461, # SPI_CE1_N
+            29: 459,
+            31: 460,
+            32: 466,
+            33: 467,
+            35: 473,
+            36: 470,
+            37: 480,
+            38: 474,
+            40: 475,
+            }
+
+        _pi_gpio_pins = [_pi_header_1_pins[i] for i in [11, 12, 13, 15, 16, 18, 22, 7, 3, 5, 24, 26, 19, 21, 23, 8, 10]]
 
     def lookup(pin_mapping, i):
         try:

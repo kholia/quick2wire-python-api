@@ -13,6 +13,10 @@ def revision():
                         return 2 # PCB rev 2.0, model A/B, default i2c bus 1, 26 pin
                     else:
                         return 3 # A+/B+/Model 2 B, 40 pin
+                elif line.startswith('CPU revision'):
+                    code = int(line.split(":")[1].strip())
+                    if code == 3:
+                        return 4
             else:
                 return 0
     except:
