@@ -1,0 +1,3 @@
+- Ensure audio quality parity with https://github.com/pu2clr/SI4735
+
+- Get SSB working ;)

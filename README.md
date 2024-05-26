@@ -1,63 +1,69 @@
-Quick2Wire Python API
-=====================
+# Quick2Wire Python API
 
 A Python library for controlling the hardware attached to the
-Raspberry Pi's header pins, [without running as the root user](http://quick2wire.com/articles/working-safely-with-your-pi/).
+Raspberry Pi's header pins.
 
+Status: Tested on Raspberry Pi Zero 2W running Raspberry Pi OS (`bookworm`) in
+May-2024.
 
-Dependencies
-------------
+### Process
 
-The library depends on Python 3. To install Python 3 run this command from an administrator account, such as `pi`:
+```
+sudo apt install i2c-tools vim git build-essential -y
 
-    sudo apt-get install python3
+sudo raspi-config nonint do_i2c 0
 
-You'll also find the python tools
-[virtualenv](http://www.virtualenv.org/en/latest/index.html) and
-[pip](http://www.pip-installer.org/en/latest/index.html) useful:
+sudo raspi-config nonint get_i2c
 
-    sudo apt-get install python-pip
-    sudo apt-get install python-virtualenv
+ls /dev/i2*
 
+sudo i2cdetect -y 1  # For modern Pis, you will need to specify 1 as the port
+```
 
-The GPIO API depends on Quick2Wire GPIO Admin.  To install Quick2Wire
-GPIO Admin, follow the instructions at
-http://github.com/quick2wire/quick2wire-gpio-admin
+Set up this library:
 
-The I2C and SPI API depend on support in the kernel. Recent raspbian kernels should be fine.
+```
+python3 setup.py install --user  # inside the repository folder
+```
 
+Set up pigpio:
 
-Installation
-------------
+```
+wget https://github.com/joan2937/pigpio/archive/master.zip
 
-The library is currently under active development, so we do not
-recommend installing it into the system-wide Python libraries.
-Instead, you can either use it without installation or install it into
-an isolated Python development environment created with
-[`virtualenv`](http://www.virtualenv.org/).
+unzip master.zip
+cd pigpio-master
+make
+sudo make install
+```
 
-To use the library without installation, add the full path of the
-source tree to the `PYTHONPATH` environment variable. For example:
+Usage:
 
-    export QUICK2WIRE_API_HOME=[the directory cloned from Git or unpacked from the source archive]
-    export PYTHONPATH=$PYTHONPATH:$QUICK2WIRE_API_HOME
+```
+sudo pigpiod
 
-If you're using virtualenv, make your virtualenv
-[active](http://www.virtualenv.org/en/latest/index.html#activate-script),
-and then run:
+python3 radio_clk.py
 
-    python3 setup.py install
+python3 radio.py
+```
 
-Getting Started
----------------
+At this point the `i2cdetect` command is able to detect the Si4732.
 
- * [Getting Started with GPIO](http://github.com/quick2wire/quick2wire-python-api/blob/master/doc/getting-started-with-gpio.md)
- * [Getting Started with I2C](http://github.com/quick2wire/quick2wire-python-api/blob/master/doc/getting-started-with-i2c.md)
+```
+pi@radio:~/quick2wire-python-api $ sudo i2cdetect -y 1
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:                         -- -- -- -- -- -- -- --
+10: -- 11 -- -- -- -- -- -- -- -- 1a -- -- -- -- --
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- --
+```
 
+### References
 
-Help and Support
-----------------
+- https://github.com/kholia/ConsensusBasedTimeSync/tree/master/Si4732-BoB-v4
 
-There is a [discussion group](https://groups.google.com/group/quick2wire-users) in which you can ask questions about the library.
-
-If you have discovered a bug or would like to request a feature, raise an issue in the [issue tracker](https://github.com/quick2wire/quick2wire-python-api/issues).
+- https://groups.io/g/si47xx/message/376
